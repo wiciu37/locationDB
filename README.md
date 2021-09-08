@@ -1,2 +1,3 @@
 # locationDB
-Rest service, saves data from devices into the database
+Implement effective REST service, that receives and saves data about geolocation from mobile devices (phone/gps)
+Data format like {'deviceId':'12345', 'name':'marekPhone', 'latitiude': 505430, 'longitude': 1423412}.
