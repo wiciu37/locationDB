@@ -2,9 +2,12 @@ package com.locationDB.dao;
 
 import com.locationDB.model.Device;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+@Repository
 public interface DeviceRepository extends CrudRepository<Device, Long> {
 
     List<Device> findByLongitude(double longitude);
@@ -14,5 +17,6 @@ public interface DeviceRepository extends CrudRepository<Device, Long> {
 
     Device findDeviceById(Long id);
     Device findDeviceByName(String name);
+
 
 }

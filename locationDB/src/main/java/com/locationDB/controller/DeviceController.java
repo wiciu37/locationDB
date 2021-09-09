@@ -53,28 +53,28 @@ public class DeviceController {
     }
 
 
-    @GetMapping("/getDeviceById/{id}")
+    @GetMapping("/getDeviceById/")
     public ResponseEntity<DeviceDto> findDeviceById(@RequestParam("id")@Min(0) @PathVariable Long id)
     {
         //return new ResponseEntity<>(repository.findDeviceById(id), HttpStatus.OK);
         return new ResponseEntity<DeviceDto>(deviceService.getDeviceById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/getDeviceByLatitude/{latitude}")
+    @GetMapping("/getDeviceByLatitude/")
     public ResponseEntity<List<DeviceDto>> getDevicesByLatitude(@RequestParam("latitude")@Min(-360) @Max(360) @PathVariable double latitude)
     {
         //return new ResponseEntity<>(repository.findByLatitude(latitude), HttpStatus.OK);
         return new ResponseEntity<>(deviceService.getDevicesByLatitude(latitude), HttpStatus.OK);
     }
 
-    @GetMapping("/getDevicesByLongitude/{longitude}")
+    @GetMapping("/getDevicesByLongitude/")
     public ResponseEntity<List<DeviceDto>> getDevicesByLongitude(@RequestParam("longitude")@Min(-360) @Max(360) @PathVariable double longitude)
     {
         //return new ResponseEntity<>(repository.findByLongitude(longitude), HttpStatus.OK);
         return new ResponseEntity<>(deviceService.getDevicesByLongitude(longitude), HttpStatus.OK);
     }
 
-    @GetMapping("/getDevicesByLocation/{longitude}/{latitude}")
+    @GetMapping("/getDevicesByLocation/")
     public ResponseEntity<List<DeviceDto>> getDevicesByLocation(@RequestParam("longitude")@Min(-360) @Max(360) @PathVariable double longitude, @RequestParam("latitude")@Min(-360) @Max(360) @PathVariable double latitude)
     {
         /*
@@ -99,7 +99,7 @@ public class DeviceController {
         return new ResponseEntity<>(deviceService.getDevicesByLocation(longitude, latitude), HttpStatus.OK);
     }
 
-    @GetMapping("/getDeviceByName/{name}")
+    @GetMapping("/getDeviceByName/")
     public ResponseEntity<DeviceDto> getDeviceByName(@RequestParam("name") @Min(-360) @Max(360) @PathVariable String name)
     {
         //return new ResponseEntity<>(repository.findDeviceByName(name), HttpStatus.OK);

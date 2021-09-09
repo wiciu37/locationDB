@@ -7,8 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Service
 public class DeviceService {
@@ -22,14 +26,13 @@ public class DeviceService {
 
 
     //Get methods
+    @Transactional
     public List<DeviceDto> getAllDevices()
     {
-        List<DeviceDto> result = new ArrayList<>();
 
-        for(Device d : repository.findAll())
-        {
-            result.add(convertToDto(d));
-        }
+        List<DeviceDto> result = StreamSupport.stream(repository.findAll().spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
 
         return result;
     }
@@ -43,27 +46,52 @@ public class DeviceService {
 
     public List<DeviceDto> getDevicesByLongitude(double longitude)
     {
-
+/*
         List<DeviceDto> result = new ArrayList();
         for(Device d : repository.findByLongitude(longitude))
         {
             result.add(convertToDto(d));
         }
         return result;
+
+ */
+        List<DeviceDto> result = StreamSupport.stream(repository.findByLongitude(longitude).spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return result;
+
     }
 
     public List<DeviceDto> getDevicesByLatitude(double latitude)
     {
+        /*
         List<DeviceDto> result = new ArrayList();
         for(Device d : repository.findByLatitude(latitude))
         {
             result.add(convertToDto(d));
         }
         return result;
+
+         */
+
+        List<DeviceDto> result = StreamSupport.stream(repository.findByLatitude(latitude).spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return result;
+
     }
 
     public List<DeviceDto> getDevicesByLocation(double longitude, double latitude)
     {
+
+        List<DeviceDto> result = StreamSupport.stream(repository.findByLongitudeAndLatitude(longitude, latitude).spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return result;
+        /*
         List<DeviceDto> result = new ArrayList<>();
 
         for(Device d : repository.findByLongitudeAndLatitude(longitude, latitude))
@@ -72,6 +100,8 @@ public class DeviceService {
         }
 
         return result;
+
+         */
     }
 
     public DeviceDto getDeviceByName(String name)
