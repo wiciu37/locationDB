@@ -13,8 +13,13 @@ import java.util.List;
 @Service
 public class DeviceService {
 
-    @Autowired
     private DeviceRepository repository;
+
+    public DeviceService(DeviceRepository repository)
+    {
+        this.repository = repository;
+    }
+
 
     //Get methods
     public List<DeviceDto> getAllDevices()
@@ -38,11 +43,11 @@ public class DeviceService {
 
     public List<DeviceDto> getDevicesByLongitude(double longitude)
     {
+
         List<DeviceDto> result = new ArrayList();
-        for(DeviceDto d : getAllDevices())
+        for(Device d : repository.findByLongitude(longitude))
         {
-            if(d.getLongitude() == longitude)
-                result.add(d);
+            result.add(convertToDto(d));
         }
         return result;
     }
@@ -50,10 +55,9 @@ public class DeviceService {
     public List<DeviceDto> getDevicesByLatitude(double latitude)
     {
         List<DeviceDto> result = new ArrayList();
-        for(DeviceDto d : getAllDevices())
+        for(Device d : repository.findByLatitude(latitude))
         {
-            if(d.getLatitude() == latitude)
-                result.add(d);
+            result.add(convertToDto(d));
         }
         return result;
     }
@@ -62,10 +66,9 @@ public class DeviceService {
     {
         List<DeviceDto> result = new ArrayList<>();
 
-        for(DeviceDto d : getAllDevices())
+        for(Device d : repository.findByLongitudeAndLatitude(longitude, latitude))
         {
-            if(d.getLatitude() == latitude && d.getLongitude() == longitude)
-                result.add(d);
+            result.add(convertToDto(d));
         }
 
         return result;
@@ -73,15 +76,8 @@ public class DeviceService {
 
     public DeviceDto getDeviceByName(String name)
     {
-        for(DeviceDto d : getAllDevices())
-        {
-            if(d.getName() == name)
-                return d;
-        }
-
-        return null;
+        return convertToDto(repository.findDeviceByName(name));
     }
-
 
 
     //Post methods

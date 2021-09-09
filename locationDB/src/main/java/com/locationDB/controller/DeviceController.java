@@ -21,21 +21,16 @@ import java.util.*;
 public class DeviceController {
 
 
-    @Autowired
     private DeviceService deviceService;
-    @Autowired
-    private DeviceRepository repository;
 
+    public DeviceController(DeviceService deviceService)
+    {
+        this.deviceService = deviceService;
+    }
 
     @PostMapping("/saveSingleDevice")
     public ResponseEntity<String> saveDevice(@RequestBody DeviceDto deviceDto)
     {
-        /*
-        //Device device = convertToEntity(deviceDto);
-        repository.save(device);
-        return new ResponseEntity<>(device.toString() +" record saved..", HttpStatus.OK);
-        */
-        //deviceService.saveSingleDevice(deviceDto);
 
         return new ResponseEntity<>(deviceService.saveSingleDevice(deviceDto), HttpStatus.OK);
     }
@@ -52,9 +47,9 @@ public class DeviceController {
     }
 
     @GetMapping("/getAllDevices")
-    public ResponseEntity<List<Device>> getAllDevices()
+    public ResponseEntity<List<DeviceDto>> getAllDevices()
     {
-        return new ResponseEntity<>(((List<Device>) repository.findAll()), HttpStatus.OK);
+        return new ResponseEntity<>(deviceService.getAllDevices(), HttpStatus.OK);
     }
 
 

@@ -20,6 +20,7 @@ public class Device {
     private double longitude;
     private double latitude;
 
+
     public String getName() {
         return name;
     }

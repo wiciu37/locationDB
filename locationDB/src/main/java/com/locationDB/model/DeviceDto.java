@@ -35,6 +35,7 @@ public class DeviceDto {
         return latitude;
     }
 
+
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
