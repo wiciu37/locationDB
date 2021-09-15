@@ -5,7 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Repository
 public interface DeviceRepository extends CrudRepository<Device, Long> {
@@ -16,7 +15,8 @@ public interface DeviceRepository extends CrudRepository<Device, Long> {
     List<Device> findByLongitudeAndLatitude(double longitude, double latitude);
 
     Device findDeviceById(Long id);
-    Device findDeviceByName(String name);
+
+    List<Device> findDevicesByName(String name);
 
 
 }

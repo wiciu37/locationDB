@@ -3,27 +3,23 @@ package com.locationDB.service;
 import com.locationDB.dao.DeviceRepository;
 import com.locationDB.model.Device;
 import com.locationDB.model.DeviceDto;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
+@RequiredArgsConstructor
 public class DeviceService {
 
-    private DeviceRepository repository;
+    private final DeviceRepository repository;
 
-    public DeviceService(DeviceRepository repository)
-    {
-        this.repository = repository;
-    }
-
+    private final ModelMapper mapper;
 
     //Get methods
     @Transactional
@@ -35,26 +31,18 @@ public class DeviceService {
                 .collect(Collectors.toList());
 
         return result;
+
+
     }
 
+    @Transactional
     public DeviceDto getDeviceById(Long id)
     {
-        DeviceDto deviceDto = convertToDto(repository.findDeviceById(id));
-
-        return deviceDto;
+        return convertToDto(repository.findDeviceById(id));
     }
 
     public List<DeviceDto> getDevicesByLongitude(double longitude)
     {
-/*
-        List<DeviceDto> result = new ArrayList();
-        for(Device d : repository.findByLongitude(longitude))
-        {
-            result.add(convertToDto(d));
-        }
-        return result;
-
- */
         List<DeviceDto> result = StreamSupport.stream(repository.findByLongitude(longitude).spliterator(), false)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -65,16 +53,6 @@ public class DeviceService {
 
     public List<DeviceDto> getDevicesByLatitude(double latitude)
     {
-        /*
-        List<DeviceDto> result = new ArrayList();
-        for(Device d : repository.findByLatitude(latitude))
-        {
-            result.add(convertToDto(d));
-        }
-        return result;
-
-         */
-
         List<DeviceDto> result = StreamSupport.stream(repository.findByLatitude(latitude).spliterator(), false)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
@@ -104,22 +82,28 @@ public class DeviceService {
          */
     }
 
-    public DeviceDto getDeviceByName(String name)
+    public List<DeviceDto> getDevicesByName(String name)
     {
-        return convertToDto(repository.findDeviceByName(name));
+        List<DeviceDto> result = StreamSupport.stream(repository.findDevicesByName(name).spliterator(), false)
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return result;
     }
 
 
     //Post methods
-    public String saveSingleDevice(DeviceDto deviceDto)
+    public Device saveSingleDevice(DeviceDto deviceDto)
     {
-        Device device = convertToEntity(deviceDto);
-        repository.save(device);
-        return device.toString() +" record saved...";
+        repository.save(convertToEntity(deviceDto));
+
+        return convertToEntity(deviceDto);
     }
 
-    public String saveMultipleDevices(List<DeviceDto> deviceDtos)
+    /*
+    public List<Device> saveMultipleDevices(List<DeviceDto> deviceDtos)
     {
+        /*
         Device device;
         for(DeviceDto d : deviceDtos)
         {
@@ -127,21 +111,28 @@ public class DeviceService {
             repository.save(device);
         }
 
-        return deviceDtos.size() + " devices saved..";
+
+
+        repository.saveAll(deviceDtos.stream().map(this::convertToEntity).collect(Collectors.toList()));
+
+        return deviceDtos.stream().map(this::convertToEntity).collect(Collectors.toList());
     }
+    */
+
+    public List<Device> saveMultipleDevices(List<DeviceDto> deviceDtos)
+    {
+
+        List<Device> result =  deviceDtos.stream().map(this::convertToEntity).collect(Collectors.toList());
+        repository.saveAll(result);
+
+        return result;
+    }
+
 
     //conversion
     private DeviceDto convertToDto(Device device)
     {
         DeviceDto deviceDto = mapper.map(device, DeviceDto.class);
-        /*
-        deviceDto.setId(device.getId());
-        deviceDto.setLatitude(device.getLatitude());
-        deviceDto.setLongitude(device.getLongitude());
-        deviceDto.setName(device.getName());
-
-
-         */
         return deviceDto;
     }
 
@@ -151,7 +142,4 @@ public class DeviceService {
 
         return device;
     }
-
-    @Autowired
-    private ModelMapper mapper;
 }
